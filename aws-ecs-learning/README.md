@@ -36,9 +36,9 @@ docker logout
 ## ECSの土台構築
 - VPC
 - ルートテーブル
-- IGW　※PublicSubnetにする場合
+- IGW
 - サブネット
-- SG作成(HTTP/HTTPS許可) - コンテナインスタンスに紐づく
+- SG作成 (コンテナインスタンスに紐づく)
 
 ## ECS構築
 Cluster作成　→　タスク定義作成　→　サービス作成
