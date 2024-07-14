@@ -38,7 +38,9 @@ docker logout
 - ルートテーブル
 - IGW
 - サブネット
-- SG作成 (コンテナインスタンスに紐づく)
+- External ALB & External ALBのSG(Internetからのアクセスを許可)
+- Internal ALB & Internal ALBのSG(コンテナインスタンスからのアクセスのみ許可)
+- コンテナインスタンスのSG作成(ExALBとIntALBからのアクセスのみ許可)
 
 ## ECS構築
 Cluster作成　→　タスク定義作成　→　サービス作成
