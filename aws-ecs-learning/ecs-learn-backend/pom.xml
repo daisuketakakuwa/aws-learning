@@ -10,7 +10,7 @@
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>ecs.learn</groupId>
-	<artifactId>ecs-learn-app</artifactId>
+	<artifactId>ecs-learn-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>

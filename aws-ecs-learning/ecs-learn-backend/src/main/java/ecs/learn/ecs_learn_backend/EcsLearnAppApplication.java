@@ -1,4 +1,4 @@
-package ecs.learn.ecs_learn_app;
+package ecs.learn.ecs_learn_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

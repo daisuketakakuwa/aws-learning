@@ -13,7 +13,7 @@ WEBアプリ(FE-BE)をECS上で稼働させるための手順、アーキテク�
 ## Dockerイメージを作成
 
 ```
-cd ecs-learn-app
+cd ecs-learn-backend
 docker build -t <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<repositoryName>:<tag> .
 ```
 

@@ -23,10 +23,10 @@ FROM amazoncorretto:17-alpine-jdk
 WORKDIR /app
 
 # ビルドステージからビルドされたJARファイルをコピー
-COPY --from=builder /app/target/*.jar /app/ecs-learn-app.jar
+COPY --from=builder /app/target/*.jar /app/ecs-learn-backend.jar
 
 # アプリケーションを実行するコマンド
-ENTRYPOINT ["java", "-jar", "/app/ecs-learn-app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/ecs-learn-backend.jar"]
 
 # (オプション) コンテナがリッスンするポートを指定
 EXPOSE 8080

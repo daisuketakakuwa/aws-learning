@@ -1,4 +1,4 @@
-package ecs.learn.ecs_learn_app.controller;
+package ecs.learn.ecs_learn_backend.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
