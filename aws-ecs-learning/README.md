@@ -2,7 +2,7 @@
 WEBアプリ(FE-BE)をECS上で稼働させるための手順、アーキテクチャのお勉強用プロジェクト
 
 ## アーキテクチャ
-<img src="https://github.com/user-attachments/assets/512c70ce-f247-4ee1-a112-a3323c21ee24" width="700px">
+<img src="https://github.com/user-attachments/assets/6e6ffc11-ce1c-461d-a1af-d25eebff1c51" width="700px">
 
 👉**1Taskでサービス稼動可能**となる単位で = FE/BEを1Taskで起動!!!<br>
 👉地理的な可用性確保のために、**2つのAZで各Taskを起動** & ALBでルーティング<br>
