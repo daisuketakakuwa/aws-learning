@@ -1,17 +1,14 @@
 # これは何
-WEBアプリ(FE-BE)をECS上で稼働させるための手順、アーキテクチャのお勉強用プロジェクト<br>
+WEBアプリ(FE-BE)をECS上で稼働させるための手順、アーキテクチャのお勉強用プロジェクト
+
+## アーキテクチャ
+<img src="https://github.com/user-attachments/assets/512c70ce-f247-4ee1-a112-a3323c21ee24" width="700px">
+
 👉**1Taskでサービス稼動可能**となる単位で = FE/BEを1Taskで起動!!!<br>
-👉**地理的な可用性確保**のために、2つのAZで各Taskを起動 & ALBでルーティング<br>
+👉地理的な可用性確保のために、**2つのAZで各Taskを起動** & ALBでルーティング<br>
 👉ECS Task = 1つの**コンテナインスタンス**(EC2/Fargate)上で実行するコンテナ群(WEB/API)<br>
 👉ECS Task定義 = Taskの設計図(イメージURL,環境変数,ポート設定)<br>
 👉SecurityGroup = 1Taskに1つのみ = ホスト(EC2)に1つAttachするイメージ。<br>
-
-<img src="https://github.com/user-attachments/assets/66a1316f-82e4-44c8-b205-38c29ff9070f" width="700px">
-
-TODO
-- FEイメージの追加
-- PrivateSubnetにして、LoadBalancerを追加する。
-- ExternalLB → FE → InternalLB → BE の構成にする。
 
 ## Dockerイメージを作成
 
