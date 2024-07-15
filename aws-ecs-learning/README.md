@@ -3,7 +3,7 @@ WEBアプリ(FE-BE)をECS上で稼働させるためのインフラ構築手順�
 
 ## アーキテクチャ
 
-<img src="https://github.com/user-attachments/assets/8c679c5d-7e36-4e0e-8c59-5b46b0ff5fcc" width="700px">
+<img src="https://github.com/user-attachments/assets/94ea9faf-eb8d-4b87-a83b-c956930e9e1b" width="700px">
 
 👉Service作成時に、タスクとLBを一緒に作成できる👍<br>
 　→**タスクをTargetとしたLBを作成できる。**(事前にLBだけ手動で作るわけではなさそう)<br>
