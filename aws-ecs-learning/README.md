@@ -48,8 +48,6 @@ docker logout
 - IGW
 - サブネット
 
-<br>
-
 ## ECS構築
 Cluster作成<br>
 → 1. BE資材作成(タスク定義/サービス)<br>
