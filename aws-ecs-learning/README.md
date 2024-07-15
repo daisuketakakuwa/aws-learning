@@ -3,7 +3,7 @@ WEBアプリ(FE-BE)をECS上で稼働させるためのインフラ構築手順�
 
 ## アーキテクチャ
 
-<img src="https://github.com/user-attachments/assets/94ea9faf-eb8d-4b87-a83b-c956930e9e1b" width="700px">
+<img src="https://github.com/user-attachments/assets/41263050-61be-47bc-9119-03925e859ab5" width="700px">
 
 👉Service作成時に、タスクとLBを一緒に作成できる👍<br>
 　→**タスクをTargetとしたLBを作成できる。**(事前にLBだけ手動で作るわけではなさそう)<br>
@@ -45,8 +45,8 @@ docker logout
 ## ECSの土台構築
 - VPC
 - ルートテーブル
-- IGW
-- サブネット
+- IGW<br>・**ExternalALBのために、VPCへのアタッチだけでOK**👍<br>・ルートテーブルのLastResortに設定すると、PublicSubnetになってしまう✕
+- サブネット × 2
 
 ## ECS構築
 Cluster作成<br>
@@ -68,6 +68,21 @@ Cluster作成<br>
 - FEサービス作成<br>
 ・ExternalALBも一緒に作成(TargetはFEタスク)<br>
 ・SecurityGroupも一緒に作成(外部NWから許可)<br>
+
+
+### LB - コンテナ連携とポートマッピング
+
+||host port|container port|
+|----|----|----|
+|FE|0(ランダム割り当て)|80※今回は3000|
+|BE|0(ランダム割り当て)|8080|
+
+俺 → LBへHTTP(80) →　LB → hostport(12345) → container port(80)
+
+✅ホストマシンのSG Inboundで「host port」を許可する必要がある!!!!<br>
+→ 0-63345 TCPで許可していた！！！！！
+
+🔴WEBとAPIは、サービス/コンテナは異なるが、**SGは同じ(TCP 0-63345を許可)**
 
 ### コンテナインスタンスの構築(起動タイプの選択)
 
