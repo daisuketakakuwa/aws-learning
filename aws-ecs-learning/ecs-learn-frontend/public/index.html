@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>ecs-learning</title>
+     <script>
+         async function fetchHello() {
+             try {
+                 const response = await fetch('/api/hello');
+                 if (!response.ok) {
+                     throw new Error('Network response was not ok ' + response.statusText);
+                 }
+                 const data = await response.text();
+                 alert(data);
+             } catch (error) {
+                 alert('Fetch error: ' + error.message);
+             }
+         }
+     </script>
+</head>
+<body>
+     <h3>ECS-LEARNING</h3>
+     <p><button onclick="fetchHello()">Fetch Hello</button></p>
+</body>
+</html>

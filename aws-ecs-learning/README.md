@@ -1,11 +1,13 @@
-# これは何
-WEBアプリ(FE-BE)をECS上で稼働させるための手順、アーキテクチャのお勉強用プロジェクト
+# ECS学習プロジェクト
+WEBアプリ(FE-BE)をECS上で稼働させるためのインフラ構築手順、アーキテクチャ勉強用プロジェクト
 
 ## アーキテクチャ
 <img src="https://github.com/user-attachments/assets/6e6ffc11-ce1c-461d-a1af-d25eebff1c51" width="700px">
 
-👉**1Taskでサービス稼動可能**となる単位で = FE/BEを1Taskで起動!!!<br>
+👉Service作成時に、タスクとLBを一緒に作成できる👍<br>
+　→**タスクをTargetとしたLBを作成できる。**<br>
 👉地理的な可用性確保のために、**2つのAZで各Taskを起動** & ALBでルーティング<br>
+👉**APIも負荷分散**できるように、InternalALBを用意。<br>
 👉ECS Task = 1つの**コンテナインスタンス**(EC2/Fargate)上で実行するコンテナ群(WEB/API)<br>
 👉ECS Task定義 = Taskの設計図(イメージURL,環境変数,ポート設定)<br>
 👉SecurityGroup = 1Taskに1つのみ = ホスト(EC2)に1つAttachするイメージ。<br>
@@ -13,8 +15,13 @@ WEBアプリ(FE-BE)をECS上で稼働させるための手順、アーキテク�
 ## Dockerイメージを作成
 
 ```
+# FEイメージ
+cd ecs-learn-frontend
+docker build -t <aws_account_id>.dkr.ecr.<region>.amazonaws.com/ecr-learn-app:frontend-<version> .
+
+# BEイメージ
 cd ecs-learn-backend
-docker build -t <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<repositoryName>:<tag> .
+docker build -t <aws_account_id>.dkr.ecr.<region>.amazonaws.com/ecr-learn-app:backend-<version> .
 ```
 
 ## ECRリポジトリにイメージを登録する
@@ -26,7 +33,8 @@ aws ecr get-login-password --region <region> | docker login --username AWS --pas
 ```
 対象リポジトリへプッシュ
 ```
-docker push  <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<repositoryName>:<tag>
+docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/ecr-learn-app:frontend-<version>
+docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/ecr-learn-app:backend-<version>
 ```
 ECRよりログアウト
 ```
@@ -38,12 +46,27 @@ docker logout
 - ルートテーブル
 - IGW
 - サブネット
-- External ALB & External ALBのSG(Internetからのアクセスを許可)
-- Internal ALB & Internal ALBのSG(コンテナインスタンスからのアクセスのみ許可)
-- コンテナインスタンスのSG作成(ExALBとIntALBからのアクセスのみ許可)
+
+<br>
 
 ## ECS構築
-Cluster作成　→　タスク定義作成　→　サービス作成
+Cluster作成<br>
+→ 1. FE資材作成(タスク定義/サービス)<br>
+→ 2. BE資材作成(タスク定義/サービス)<br>
+
+### FE資材作成
+- Dockerイメージ作成/更新 → ECRへ登録
+- FEタスク定義作成(最新のイメージ参照)
+- FEサービス作成<br>
+・ExternalALBも一緒に作成(TargetはFEタスク)<br>
+・SecurityGroupも一緒に作成(外部NWから許可)<br>
+
+### BE資材作成
+- Dockerイメージ作成/更新 → ECRへ登録
+- BEタスク定義作成(最新のイメージ参照)
+- BEサービス作成<br>
+・InternalALBも一緒に作成(TargetはBEタスク)<br>
+・SecurityGroupも一緒に作成(InternalLBから許可)<br>
 
 ### コンテナインスタンスの構築(起動タイプの選択)
 
