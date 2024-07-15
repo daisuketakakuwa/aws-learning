@@ -2,10 +2,11 @@
 WEBアプリ(FE-BE)をECS上で稼働させるためのインフラ構築手順、アーキテクチャ勉強用プロジェクト
 
 ## アーキテクチャ
-<img src="https://github.com/user-attachments/assets/6e6ffc11-ce1c-461d-a1af-d25eebff1c51" width="700px">
+
+<img src="https://github.com/user-attachments/assets/8c679c5d-7e36-4e0e-8c59-5b46b0ff5fcc" width="700px">
 
 👉Service作成時に、タスクとLBを一緒に作成できる👍<br>
-　→**タスクをTargetとしたLBを作成できる。**<br>
+　→**タスクをTargetとしたLBを作成できる。**(事前にLBだけ手動で作るわけではなさそう)<br>
 👉地理的な可用性確保のために、**2つのAZで各Taskを起動** & ALBでルーティング<br>
 👉**APIも負荷分散**できるように、InternalALBを用意。<br>
 👉ECS Task = 1つの**コンテナインスタンス**(EC2/Fargate)上で実行するコンテナ群(WEB/API)<br>
@@ -51,15 +52,10 @@ docker logout
 
 ## ECS構築
 Cluster作成<br>
-→ 1. FE資材作成(タスク定義/サービス)<br>
-→ 2. BE資材作成(タスク定義/サービス)<br>
-
-### FE資材作成
-- Dockerイメージ作成/更新 → ECRへ登録
-- FEタスク定義作成(最新のイメージ参照)
-- FEサービス作成<br>
-・ExternalALBも一緒に作成(TargetはFEタスク)<br>
-・SecurityGroupも一緒に作成(外部NWから許可)<br>
+→ 1. BE資材作成(タスク定義/サービス)<br>
+→ 2. FE資材作成(タスク定義/サービス)<br>
+<br>
+👉**依存される順番(BE→FE)でリソース構築する。**
 
 ### BE資材作成
 - Dockerイメージ作成/更新 → ECRへ登録
@@ -67,6 +63,13 @@ Cluster作成<br>
 - BEサービス作成<br>
 ・InternalALBも一緒に作成(TargetはBEタスク)<br>
 ・SecurityGroupも一緒に作成(InternalLBから許可)<br>
+
+### FE資材作成
+- Dockerイメージ作成/更新 → ECRへ登録
+- FEタスク定義作成(最新のイメージ参照)
+- FEサービス作成<br>
+・ExternalALBも一緒に作成(TargetはFEタスク)<br>
+・SecurityGroupも一緒に作成(外部NWから許可)<br>
 
 ### コンテナインスタンスの構築(起動タイプの選択)
 
