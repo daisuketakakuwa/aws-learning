@@ -1,0 +1,28 @@
+{
+  "name": "serverless-ts-learning",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "@types/axios": "^0.14.0",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/jwk-to-pem": "^2.0.1",
+    "npm-run-all": "^4.1.5",
+    "serverless": "^3.25.1",
+    "serverless-offline": "^11.6.0",
+    "serverless-plugin-typescript": "^2.1.4",
+    "serverless-s3-local": "^0.7.2",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.7",
+    "axios": "^0.21.4",
+    "json-server": "^0.17.3",
+    "jsonwebtoken": "^9.0.1",
+    "jwk-to-pem": "^2.0.5"
+  },
+  "scripts": {
+    "dev": "npm-run-all --parallel --print-label dev:sls dev:mockapi",
+    "dev:sls": "npx sls offline start",
+    "dev:mockapi": "json-server --port 8888 --watch mock/data.json"
+  }
+}

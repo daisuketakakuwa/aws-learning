@@ -1,0 +1,98 @@
+service: serverless-ts-learning
+
+frameworkVersion: "3"
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+  - serverless-s3-local
+
+provider:
+  name: aws
+  stage: ${opt:stage, "offline"}
+  region: ${opt:region, "ap-northeast-1"}
+  runtime: nodejs18.x
+  # 作成済のIAMロールを指定する場合は定義。未定義だと自動作成してくれる。
+  # iam:
+  #   role:
+  endpointType: private
+  # Private APIGWなので、接続元となるVPCEndpointをここに定義
+  vpcEndpointIds:
+    - vpce-0a1a040721b333ab6
+  versionFunctions: false
+  # Lambdaに紐づくAPIGWを自動生成してくれる
+  apiGateway:
+    resourcePolicy: ${file(serverless-config/helloApiGwResourcePolicy.yml)}
+
+custom:
+  conf: ${file(serverless-config/env.dev.yml)}
+  s3:
+    host: localhost
+    port: 4569
+    directory: ./tests/resources
+    bucketName: serverless-ts-learning-bucket2
+
+functions:
+  auth:
+    handler: src/functions/authorizer/authHandler.default
+    events:
+      - http:
+          path: auth
+          method: get
+  helloLambdaIntegration:
+    handler: src/functions/hello/helloLambdaIntegration.default
+    events:
+      - http:
+          path: helloNoProxy
+          method: get
+  helloLambdaProxyIntegration:
+    handler: src/functions/hello/helloLambdaProxyIntegration.default
+    events:
+      - http:
+          path: helloLambdaProxy
+          method: get
+# functionsに紐づくAPIGWは、provider.apiGatewayを定義すれば
+# 自動でAPIGW作ってくれる。
+
+# resources:
+#   Resources:
+#     # https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html
+#     HelloAPI:
+#       # MethodType[HTTP/REST]
+#       Type: AWS::ApiGateway::RestApi
+#       Properties:
+#         Name: ${self.service}-${sls:stage}-hello
+#         EndpointConfiguration:
+#           # EndpointType[Public/Private]
+#           Types:
+#             - PRIVATE
+#           # ここで指定したVPCエンドポイントIDと、APIGWのIDを使って下記のようなDNSレコードが自動的に定義される。
+#           # https://{rest-api-id}-{vpce-id}.execute-api.{region}.amazonaws.com
+#           VpcEndpointIds:
+#             - vpce-0a1a040721b333ab6
+#           Policy: ${file(serverless-config/helloApiGwResoucePolicy.json)}
+#     # Resource [hello] -> これに対してMethod(GET/POST/PUT/DELETE)を追加していく。
+#     # https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-resource.html
+#     HelloResource:
+#       Type: AWS::ApiGateway::Resource
+#       Properties:
+#         RestApiId: !Ref HelloAPI
+#         ParentId: !GetAtt
+#           - HelloAPI
+#           - RootResourceId
+#         PathPart: "{proxy+}"
+
+#     # Method -> Resource配下に生やしていく。
+#     # https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-method.html
+#     HelloMethod:
+#       Type: AWS::ApiGateway:Method
+#       Properties:
+#         RestApiId: !Ref HelloAPI
+#         ResourceId: !GetAtt
+#           - HelloAPI
+#           - RootResourceId
+#         HttpMethod: GET
+#         AuthorizationType: NONE
+#         Integration:
+#           Type: AWS_PROXY
+#           IntegrationHttpMethod: GET

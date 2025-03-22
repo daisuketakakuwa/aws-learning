@@ -1,0 +1,13 @@
+- Effect: Deny
+  Principal: "*"
+  Action: execute-api:Invoke
+  Resource:
+    - execute-api:/*/*/*
+  Condition:
+    StringNotEquals:
+      aws:sourceVpce: ${self.custom.conf.vpceId}
+- Effect: Allow
+  Principal: "*"
+  Action: execute-api:Invoke
+  Resource:
+    - execute-api:/*/*/*
